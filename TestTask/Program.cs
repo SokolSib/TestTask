@@ -28,26 +28,36 @@ namespace TestTask
             var fileCaseSensitive = args.Length > 0 ? args[0] : Path.Combine(curDir, ExampleDirName, "ExampleCaseSensitive.txt");
             var fileCaseInsensitive = args.Length > 1 ? args[1] : Path.Combine(curDir, ExampleDirName, "ExampleCaseInsensitive.txt");
 
-            using (var streamCaseSensitive = GetInputStream(fileCaseSensitive))
-            {
-                var singleLetterStats = LetterStatsHelper.FillSingleLetterStats(streamCaseSensitive);                
-                var clearedSingleLetterStats = RemoveCharStatsHelper.RemoveCharStatsByType(singleLetterStats, CharType.Vowel);
-                
-                Console.WriteLine("Кол-во вхождений каждой буквы (регистрозависимо) в очищенной статистике без гласных:");
-                PrintStatistic(clearedSingleLetterStats);
-            }
+            // Кол-во вхождений каждой буквы (регистрозависимо)
+            var clearedSingleLetterStats = ProcessStats(fileCaseSensitive, LetterStatsHelper.FillSingleLetterStats, CharType.Vowel);
+            Console.WriteLine("Кол-во вхождений каждой буквы (регистрозависимо) в очищенной статистике без гласных:");
+            PrintStatistic(clearedSingleLetterStats);
 
-            using (var streamCaseInsensitive = GetInputStream(fileCaseInsensitive))
-            {
-                var doubleLetterStats = LetterStatsHelper.FillDoubleLetterStats(streamCaseInsensitive);
-                var clearedDoubleLetterStats = RemoveCharStatsHelper.RemoveCharStatsByType(doubleLetterStats, CharType.Consonants);
-                
-                Console.WriteLine("Кол-во вхождений парных букв (не регистрозависимо) в очищенной статистике без согласных:");
-                PrintStatistic(clearedDoubleLetterStats);
-            }
+            // Кол-во вхождений парных букв (не регистрозависимо)
+            var clearedDoubleLetterStats = ProcessStats(fileCaseInsensitive, LetterStatsHelper.FillDoubleLetterStats, CharType.Consonants);
+            Console.WriteLine("Кол-во вхождений парных букв (не регистрозависимо) в очищенной статистике без согласных:");
+            PrintStatistic(clearedDoubleLetterStats);
 
             Console.WriteLine("Для завершения работы нажмите любую клавишу");
             Console.ReadKey();
+        }
+
+        /// <summary>
+        /// Процесс сбора и очистки статистики
+        /// </summary>
+        /// <param name="fileName">Имя файла</param>
+        /// <param name="fillFunc">Функция сбора статистики</param>
+        /// <param name="clearType">Тип очистки статистики</param>
+        /// <returns>Очищенная по типу символов статистика</returns>
+        private static IList<LetterStats> ProcessStats(string fileName, Func<IReadOnlyStream, IList<LetterStats>> fillFunc, CharType clearType)
+        {
+            IList<LetterStats> stats;
+            using (var stream = GetInputStream(fileName))
+            {
+                stats = fillFunc(stream);
+            }
+            
+            return RemoveCharStatsHelper.RemoveCharStatsByType(stats, clearType);
         }
 
         /// <summary>
