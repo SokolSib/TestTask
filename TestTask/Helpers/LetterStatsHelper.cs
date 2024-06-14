@@ -59,6 +59,7 @@ namespace TestTask.Helpers
 
                 if (!char.IsLetter(c))
                 {
+                    doubleLetter.Clear();
                     continue;
                 }
 
@@ -66,8 +67,15 @@ namespace TestTask.Helpers
 
                 if (doubleLetter.Length == 2)
                 {
-                    IncStatistic(statsDic, doubleLetter.ToString());
-                    doubleLetter.Clear();
+                    if (doubleLetter[0] == doubleLetter[1])
+                    {
+                        IncStatistic(statsDic, doubleLetter.ToString());
+                        doubleLetter.Clear();
+                    }
+                    else
+                    {
+                        doubleLetter.Remove(0, 1);
+                    }
                 }
             }
 
