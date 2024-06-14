@@ -7,12 +7,6 @@ namespace TestTask.Helpers
     public static class LetterStatsHelper
     {
         /// <summary>
-        /// Разделители букв (игнорируются в статистике)
-        /// первые что пришли в голову (не стал заморачиваться про все возможные варианты, т.к. тестовое задание и на логику сильно не влияет)
-        /// </summary>
-        private static List<char> separators = new List<char> { ' ', ',', '.', ';', '\n', '\r', '\t' };
-
-        /// <summary>
         /// Ф-ция считывающая из входящего потока все буквы, и возвращающая коллекцию статистик вхождения каждой буквы.
         /// Буквой считается любой символ кроме разделителей
         /// Статистика РЕГИСТРОЗАВИСИМАЯ!
@@ -28,7 +22,7 @@ namespace TestTask.Helpers
             {
                 char c = stream.ReadNextChar();
 
-                if (separators.Contains(c))
+                if (!char.IsLetter(c))
                 {
                     continue;
                 }
@@ -63,7 +57,7 @@ namespace TestTask.Helpers
             {
                 char c = stream.ReadNextChar();
 
-                if (separators.Contains(c))
+                if (!char.IsLetter(c))
                 {
                     continue;
                 }

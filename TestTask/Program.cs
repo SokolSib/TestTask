@@ -73,6 +73,8 @@ namespace TestTask
             {
                 Console.WriteLine($"{stat.Letter} : {stat.Count}");
             }
+
+            Console.WriteLine($"ИТОГО: {letters.Count()}");
         }
     }
 }
